@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>index.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="Gruntfile.html">
+                  Gruntfile.js
+                </a>
+              
+                
+                <a class="source" href="app.html">
+                  app.js
+                </a>
+              
+                
+                <a class="source" href="alumnos.html">
+                  alumnos.js
+                </a>
+              
+                
+                <a class="source" href="index.html">
+                  index.js
+                </a>
+              
+                
+                <a class="source" href="login.html">
+                  login.js
+                </a>
+              
+                
+                <a class="source" href="nuevaempresa.html">
+                  nuevaempresa.js
+                </a>
+              
+                
+                <a class="source" href="nuevoalumno.html">
+                  nuevoalumno.js
+                </a>
+              
+                
+                <a class="source" href="votar.html">
+                  votar.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>index.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>);
+<span class="hljs-keyword">var</span> router = express.Router();
+<span class="hljs-keyword">var</span> ObjectID = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mongodb'</span>).ObjectID;
+
+<span class="hljs-comment">/* GET home page. */</span>
+router.get(<span class="hljs-string">'/'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>) </span>{
+  res.render(<span class="hljs-string">'index'</span>, { title: <span class="hljs-string">'Express'</span> });
+});
+
+<span class="hljs-comment">/* GET Hello World page. */</span>
+router.get(<span class="hljs-string">'/helloworld'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+    res.render(<span class="hljs-string">'helloworld'</span>, { title: <span class="hljs-string">'Hello, World!'</span> });
+});
+
+<span class="hljs-comment">/* GET Alumnos. */</span>
+router.get(<span class="hljs-string">'/alumnos'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">var</span> db = req.db;
+    <span class="hljs-keyword">var</span> collection = db.get(<span class="hljs-string">'alumnos'</span>);
+    <span class="hljs-keyword">var</span> collection2 = db.get(<span class="hljs-string">'empresa'</span>);
+    <span class="hljs-built_in">console</span>.log(req.session.usuario);
+    collection.find({},{},<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e,docs</span>)</span>{
+
+      collection2.find({}, { sort : { <span class="hljs-string">"puntuacion"</span> : -<span class="hljs-number">1</span> }},
+        <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, emp</span>)</span>{
+          <span class="hljs-built_in">console</span>.log(emp);
+          res.render(<span class="hljs-string">'alumnos'</span>, {
+              <span class="hljs-string">"alumnos"</span> : docs,
+              <span class="hljs-string">"empresas"</span> : emp,
+              <span class="hljs-string">"usuario"</span> : req.session.usuario
+          });
+      });
+    });
+
+
+});
+
+<span class="hljs-comment">/* GET Nuevo alumno. */</span>
+router.get(<span class="hljs-string">'/nuevoalumno'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">var</span> db = req.db;
+    <span class="hljs-keyword">var</span> collection = db.get(<span class="hljs-string">'empresa'</span>);
+    collection.find({},{},<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e,docs</span>)</span>{
+        res.render(<span class="hljs-string">'nuevoalumno'</span>, {
+            <span class="hljs-string">"title"</span> : <span class="hljs-string">"Nuevo Alumno"</span>,
+            <span class="hljs-string">"empresa"</span> : docs
+        });
+    });
+});
+
+<span class="hljs-comment">/* GET Nueva empresa. */</span>
+router.get(<span class="hljs-string">'/nuevaempresa'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+    res.render(<span class="hljs-string">'nuevaempresa'</span>, {
+        <span class="hljs-string">"title"</span> : <span class="hljs-string">"Nueva empresa"</span>
+    });
+});
+
+<span class="hljs-comment">/* POST nueva empresa */</span>
+router.post(<span class="hljs-string">'/nuevaempresa'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Set our internal DB variable</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> db = req.db;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Get our form values. These rely on the “name” attributes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> nombreEmpresa = req.body.nombre;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Set our collection</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> collection = db.get(<span class="hljs-string">'empresa'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Submit to the DB</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    collection.insert({
+        <span class="hljs-string">"nombre"</span> : nombreEmpresa,
+        <span class="hljs-string">"puntuacion"</span> : <span class="hljs-number">0</span>
+    }, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, doc</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>If it failed, return error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            res.send(<span class="hljs-string">"There was a problem adding the information to the database."</span>);
+        }
+        <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>And forward to success page</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            res.redirect(<span class="hljs-string">"alumnos"</span>);
+
+        }
+    });
+});
+
+<span class="hljs-comment">/* POST to Add User Service */</span>
+router.post(<span class="hljs-string">'/nuevoalumno'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Set our internal DB variable</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> db = req.db;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Get our form values. These rely on the “name” attributes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> nombreAlumno = req.body.nombre;
+    <span class="hljs-keyword">var</span> passAlumno = req.body.password;
+    <span class="hljs-keyword">var</span> empresaAlumno = req.body.listaempresas;
+    <span class="hljs-keyword">var</span> idEmpresa = <span class="hljs-keyword">new</span> ObjectID(empresaAlumno);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Set our collection</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> collection = db.get(<span class="hljs-string">'alumnos'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Submit to the DB</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    collection.insert({
+        <span class="hljs-string">"nombre"</span> : nombreAlumno,
+        <span class="hljs-string">"password"</span> : passAlumno,
+        <span class="hljs-string">"empresa"</span> : idEmpresa
+    }, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, doc</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>If it failed, return error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            res.send(<span class="hljs-string">"There was a problem adding the information to the database."</span>);
+        }
+        <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>And forward to success page</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            req.session.alumno=nombreAlumno;
+            res.redirect(<span class="hljs-string">"alumnos"</span>);
+
+        }
+    });
+});
+
+<span class="hljs-comment">/* GET to votar */</span>
+router.get(<span class="hljs-string">'/votar'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">if</span>(req.session.usuario){
+      <span class="hljs-keyword">var</span> db = req.db;
+
+      <span class="hljs-keyword">var</span> collection = db.get(<span class="hljs-string">'alumnos'</span>);
+
+      res.render(<span class="hljs-string">'votar'</span>, { usuario: req.session.usuario})
+    }<span class="hljs-keyword">else</span>{
+      res.render(<span class="hljs-string">'votar'</span>);
+    }
+});
+
+router.post(<span class="hljs-string">'/votar'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Set our internal DB variable</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> db = req.db;
+
+    <span class="hljs-keyword">var</span> collection = db.get(<span class="hljs-string">'empresa'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Set our collection</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> idEmpresa = <span class="hljs-keyword">new</span> ObjectID(req.session.empresa);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>console.log(idEmpresa);</p>
+<p>console.log(req.body.voto);</p>
+<p>collection.update(
+  { “_id” : idEmpresa }, { $inc : { “puntuacion” : req.body.voto } },
+    function(e,empresa){
+      console.log(empresa);
+});</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    <span class="hljs-built_in">console</span>.log(req.body.voto);
+    <span class="hljs-built_in">console</span>.log(req.session.empresa);
+
+    <span class="hljs-keyword">var</span> nota = req.body.voto;
+
+    collection.update({ <span class="hljs-string">"_id"</span> : idEmpresa},
+      { <span class="hljs-string">"$inc"</span> : { <span class="hljs-string">"puntuacion"</span> : <span class="hljs-built_in">Number</span>(nota) } },
+      <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err,data</span>)</span>{
+      <span class="hljs-keyword">if</span> (err){
+          <span class="hljs-built_in">console</span>.log(err);
+      }<span class="hljs-keyword">else</span>{
+          <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"score succeded"</span>);
+          res.redirect(<span class="hljs-string">"alumnos"</span>);
+      }
+  });
+
+
+});
+
+<span class="hljs-comment">/* GET to login */</span>
+router.get(<span class="hljs-string">'/login'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">if</span>(req.session.usuario)
+      res.render(<span class="hljs-string">'login'</span>, { title: <span class="hljs-string">'Logout'</span>, usuario: req.session.usuario})
+    <span class="hljs-keyword">else</span>
+      res.render(<span class="hljs-string">'login'</span>, { title: <span class="hljs-string">'Login'</span> });
+});
+
+<span class="hljs-comment">/* POST Sign in */</span>
+router.post(<span class="hljs-string">'/login'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Set our internal DB variable</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> db = req.db;
+
+    <span class="hljs-keyword">var</span> collection = db.get(<span class="hljs-string">'alumnos'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Get our form values. These rely on the “name” attributes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> nombreAlumnoIntroducido = req.body.nombre;
+    <span class="hljs-keyword">var</span> passAlumnoIntroducida = req.body.password;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Set our collection</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    collection.findOne({ <span class="hljs-string">"nombre"</span> : nombreAlumnoIntroducido,
+      <span class="hljs-string">"password"</span> : passAlumnoIntroducida }, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e,alumno</span>)</span>{
+
+        <span class="hljs-keyword">if</span>(alumno == <span class="hljs-literal">null</span>){
+          res.render(<span class="hljs-string">'login'</span>, { title: <span class="hljs-string">'Login'</span> });
+        }<span class="hljs-keyword">else</span>{
+          <span class="hljs-keyword">if</span>(alumno.nombre == nombreAlumnoIntroducido &amp;&amp; alumno.password == passAlumnoIntroducida){
+            req.session.usuario = nombreAlumnoIntroducido;
+            req.session.empresa = alumno.empresa;
+            res.redirect(<span class="hljs-string">"alumnos"</span>);
+          }
+        }
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Submit to the DB</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+
+});
+
+router.post(<span class="hljs-string">'/logout'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Set our internal DB variable</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    req.session.destroy();
+    res.redirect(<span class="hljs-string">"alumnos"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Submit to the DB</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+
+});
+
+
+<span class="hljs-built_in">module</span>.exports = router;</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

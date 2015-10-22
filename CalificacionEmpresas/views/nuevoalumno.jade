@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    h1= title
+    form#formAddUser(name="nuevoalumno",method="post",action="/nuevoalumno")
+        input#entradaNombreUsuario(type="text", placeholder="nombre", name="nombre")
+        input#entradaUsuarioPassword(type="password", placeholder="password", name="password")
+        select(name="listaempresas")
+          each e, i in empresa
+            option(value=e._id) #{e.nombre}
+
+        button#btnSubmit(type="submit") Enviar

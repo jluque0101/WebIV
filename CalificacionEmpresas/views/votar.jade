@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  if usuario
+    h1 Hola #{usuario}
+    form#formVotar(name="votar",method="post",action="/votar")
+        input#entrada0(type="radio", name="voto", value="0" checked)
+        | 0
+        input#entrada1(type="radio", name="voto", value="1" )
+        | 1
+        input#entrada2(type="radio", name="voto", value="2" )
+        | 2
+        input#entrada3(type="radio", name="voto", value="3" )
+        | 3
+        input#entrada4(type="radio", name="voto", value="4" )
+        | 4
+        input#entrada5(type="radio", name="voto", value="5" )
+        | 5
+        button#btnSubmit(type="submit") Votar
+
+  else
+    h1 No estás autorizado a estar aqui

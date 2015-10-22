@@ -1,0 +1,7 @@
+extends layout
+
+block content
+    h1= title
+    form#formAddEmpresa(name="nuevoalumno",method="post",action="/nuevaempresa")
+        input#entradaNombreEmpresa(type="text", placeholder="nombre", name="nombre")
+        button#btnSubmit(type="submit") Añadir

@@ -1,0 +1,43 @@
+extends layout
+
+block content
+    h1 Sistema de calificación de empresas
+    if usuario
+      p Estas autentificado como <b> #{usuario} </b>
+      form#formLogout(name="votar",method="get",action="/votar")
+          button#btnSubmit(type="submit") Votar
+      form#formLogout(name="logout",method="post",action="/logout")
+          button#btnSubmit(type="submit") Log out
+    else
+      form#formLogout(name="login",method="get",action="/login")
+          button#btnSubmit(type="submit") Log in
+      form#formLogout(name="nuevousuario",method="get",action="/nuevoalumno")
+          button#btnSubmit(type="submit") Registro
+      form#formLogout(name="nuevaempresa",method="get",action="/nuevaempresa")
+          button#btnSubmit(type="submit") Añadir empresa
+      
+
+    
+
+    table
+      tr
+        td(align="center")
+          b Empresa
+        td(align="center")
+          b Calificacion
+      each e, i in empresas
+        tr
+          td(align="center")
+            p= e.nombre
+          td(align="center")
+            p= e.puntuacion
+            
+    table
+      tr
+        td(align="center")
+          b Alumnos inscritos
+        each a, i in alumnos
+          tr
+            td
+              p= a.nombre
+      
