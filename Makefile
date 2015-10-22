@@ -1,3 +1,3 @@
 test:
 	echo `pwd`
-	./CalificacionEmpresas/node_modules/mocha/bin/mocha CalificacionEmpresas/test/test.js
+	./WebIV/CalificacionEmpresas/node_modules/mocha/bin/mocha /WebIV/CalificacionEmpresas/test/test.js
